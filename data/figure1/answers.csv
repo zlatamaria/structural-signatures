@@ -1,0 +1,7 @@
+id,sample_size,answer,score_mode,edge_quantile,cohesion_mode,community_min_support,transition_min_support,raw_count,first_trace_position,is_correct_answer
+80,78,499,raw_min,0.9,min,5,3,12,1,False
+80,78,501,raw_min,0.9,min,5,3,8,20,True
+315,25,1,raw_min,0.9,min,5,3,7,1,False
+315,25,41,raw_min,0.9,min,5,3,6,11,True
+435,40,"(-\infty, 2) \cup (3, \infty)",raw_min,0.9,min,5,3,12,3,True
+435,41,"(-\infty, 2] \cup [3, \infty)",raw_min,0.9,min,5,3,10,5,False

@@ -1,0 +1,13 @@
+{
+  "raw_traces": 49500,
+  "retained_traces": 47180,
+  "rejected_answers": 2320,
+  "questions": 500,
+  "budgets": 95,
+  "matched_candidate_rows": 894903,
+  "matched_question_prefixes": 47500,
+  "short_prefixes": 2320,
+  "questions_short_at_last_budget": 397,
+  "minimum_retained_traces": 51,
+  "conflicting_answer_labels": 1
+}

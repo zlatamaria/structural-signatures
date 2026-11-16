@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "Please cite the MathNLP paper when using this software or its archived results."
+title: "Structural Signatures of Correct Mathematical Reasoning Traces"
+type: software
+authors:
+  - family-names: Marina
+    given-names: Maria
+  - family-names: Panchenko
+    given-names: Alexander
+repository-code: "https://github.com/zlatamaria/structural-signatures"
+license: MIT
+preferred-citation:
+  type: conference-paper
+  title: "Structural Signatures of Correct Mathematical Reasoning Traces"
+  authors:
+    - family-names: Marina
+      given-names: Maria
+    - family-names: Panchenko
+      given-names: Alexander
+  collection-title: "The Proceedings of the 4th Workshop on Mathematical Natural Language Processing (MathNLP 2026)"
+  year: 2026
+  month: 10
+  start: 194
+  end: 200
+  publisher:
+    name: "Association for Computational Linguistics"
+  doi: "10.18653/2026.mathnlp-main.15"
+  url: "https://aclanthology.org/2026.mathnlp-main.15/"

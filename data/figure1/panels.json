@@ -1,0 +1,56 @@
+[
+  {
+    "case": "Early repair",
+    "role": "Structural",
+    "id": "315",
+    "sample_size": 25,
+    "answer": "41",
+    "raw_count": 6,
+    "correct": true
+  },
+  {
+    "case": "Early repair",
+    "role": "Majority",
+    "id": "315",
+    "sample_size": 25,
+    "answer": "1",
+    "raw_count": 7,
+    "correct": false
+  },
+  {
+    "case": "Late repair",
+    "role": "Structural",
+    "id": "80",
+    "sample_size": 78,
+    "answer": "501",
+    "raw_count": 8,
+    "correct": true
+  },
+  {
+    "case": "Late repair",
+    "role": "Majority",
+    "id": "80",
+    "sample_size": 78,
+    "answer": "499",
+    "raw_count": 12,
+    "correct": false
+  },
+  {
+    "case": "Structural drift",
+    "role": "Previous",
+    "id": "435",
+    "sample_size": 40,
+    "answer": "(-\\infty, 2) \\cup (3, \\infty)",
+    "raw_count": 12,
+    "correct": true
+  },
+  {
+    "case": "Structural drift",
+    "role": "Current",
+    "id": "435",
+    "sample_size": 41,
+    "answer": "(-\\infty, 2] \\cup [3, \\infty)",
+    "raw_count": 10,
+    "correct": false
+  }
+]

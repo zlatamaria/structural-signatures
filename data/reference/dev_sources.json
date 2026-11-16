@@ -1,0 +1,26 @@
+{
+  "dev400": {
+    "path": "answer_local_prefix_v8_train_c5_t1_routes_combined_400_excess_analysis_progress/tables/excess_metric_accuracy_by_sample_size.csv",
+    "sha256": "df0691c467176ca74b397f1c42ab442241761c44b2be6fd2e31c967252029153"
+  },
+  "dev100": {
+    "path": "community_support_c2_c3_vs_c5/analysis_c23_N100/tables/excess_metric_accuracy_by_sample_size.csv",
+    "sha256": "98176651c2887fd46eb5e6ece9fe523bfc5612e2b35ea4e9a3de14e09ee500fa"
+  },
+  "dev100ref": {
+    "path": "community_support_c2_c3_vs_c5/analysis_c5_N100/tables/excess_metric_accuracy_by_sample_size.csv",
+    "sha256": "669130486c0219b185661f337d23bdd5fff74b1f0b1cf7629287846b04a7cf54"
+  },
+  "dev350_085": {
+    "path": "similarity_quantile_q085_q095_vs_q090/analysis_q085_N350/tables/excess_metric_accuracy_by_sample_size.csv",
+    "sha256": "ff38be99d1a3f9df138808e875b45fec486e182c6a6c17d6061217cbee465e7c"
+  },
+  "dev350_090": {
+    "path": "similarity_quantile_q085_q095_vs_q090/analysis_q090_N350/tables/excess_metric_accuracy_by_sample_size.csv",
+    "sha256": "a3fbdfe4fa865d814f0e90b2e97d2b1f47399cb1fba291b1e0a9674ceb212abd"
+  },
+  "dev350_095": {
+    "path": "similarity_quantile_q085_q095_vs_q090/analysis_q095_N350/tables/excess_metric_accuracy_by_sample_size.csv",
+    "sha256": "89dd303b73e7aad35a09b8418e896638536fa74ed47889e36f9cd4e60477f48a"
+  }
+}
