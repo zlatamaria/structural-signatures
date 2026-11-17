@@ -4,17 +4,21 @@
 
 [Paper](https://aclanthology.org/2026.mathnlp-main.15/) · [Figure 1 notebook](notebooks/figure1.ipynb) · [Pipeline guide](docs/PIPELINE.md) · [Data dictionary](data/README.md) · [Reproduction audit](docs/REPRODUCTION.md)
 
-## Why can six traces beat seven votes?
+## How do the steps leading to an answer vary?
 
-Suppose several solutions reach checkpoint B after checkpoint A. Some go directly from A to B. Others reach B through an intermediate step D. They agree about the dependency and differ in how they justify it. The paper asks whether this pattern can identify a correct answer that has fewer votes. Repeating the same mistaken derivation can give a wrong answer many votes and a tree-shaped graph.
+When a model solves the same problem twice, it can take different steps to reach the same answer. In the first example below, $a, b, 2009$ form a geometric sequence with common ratio $r$. One solution writes $b=ar$ and $2009=br$, then substitutes to get $2009=ar^2$. Another writes $2009=ar^2$ directly. We group steps that express the same intermediate claim across traces ending in the same answer. Each recurring group is a **checkpoint**.
 
-Figure 1 draws one graph for each candidate answer. A node is a mathematical checkpoint shared across traces. An arrow is a checkpoint order observed both directly and with intermediate steps. **Purple arrows are excess edges.** The thinner arrows connect the checkpoints in a spanning tree. Each purple arrow adds an alternative connection beyond that tree. Its direction shows the observed checkpoint order. Its contribution to excess is counted with direction ignored.
+We hypothesize that correct solutions often share key checkpoints while varying in the steps that connect them. A wrong answer may collect many votes because several traces repeat the same mistaken sequence of steps with little variation.
 
-On MATH500 question 315, seven of the first 25 retained traces vote for `1`. Their strongest component has zero excess edges. Six traces vote for `41` and have four excess edges. The selector chooses `41`. The rightmost pair shows how the same rule can also introduce an error.
+In Figure 1, nodes are checkpoints. An arrow means that traces consistently visit two checkpoints in that order, sometimes consecutively and sometimes with another checkpoint in between. The thin arrows form a spanning tree connecting all the nodes in a panel. **Purple arrows are excess edges** that add alternative connections beyond the tree. Under each graph, `Freq` counts traces that produced the answer and `Excess` counts purple arrows.
 
-![Six answer graphs. The first two pairs illustrate repairs. The last pair shows a wrong switch. Purple arrows mark alternative connections beyond the spanning tree.](docs/assets/figure1.png)
+In the first two pairs, the left panel (**Structural**) shows the less frequent answer selected by the method. The right panel (**Majority**) shows the most frequent answer. The first pair compares six votes for `41` with seven for `1`. The second compares eight votes for `501` with twelve for `499`. The final pair follows the selected answer from 40 to 41 traces.
 
-*Figure 1. The first two pairs compare a structural choice with the majority at the same budget. The last pair follows question 435 from 40 to 41 traces. Panel labels give the current vote count and excess. The choice uses the score averaged over nearby prefixes.* [Vector figure](docs/assets/figure1.pdf) · [Rebuild the six panels](notebooks/figure1.ipynb)
+![Six checkpoint graphs. From left to right, the numbers of purple excess edges are 4, 0, 9, 7, 3 and 4.](docs/assets/figure1.png)
+
+*Figure 1. The first two pairs show repairs. The third shows a loss.*
+
+[Vector figure](docs/assets/figure1.pdf) · [Rebuild the six panels](notebooks/figure1.ipynb)
 
 ## Choose a starting point
 
