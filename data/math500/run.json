@@ -1,0 +1,29 @@
+{
+  "config": {
+    "score_mode": "raw_min",
+    "edge_quantile": 0.9,
+    "cohesion_mode": "min",
+    "community_min_support": 5,
+    "transition_min_support": 3
+  },
+  "candidate_rows": 894903,
+  "precedence_rows": 2537658,
+  "inputs": {
+    "answers": {
+      "file": "combined-answers.csv.gz",
+      "sha256": "891ad355cd9cebc6c43b7c44bafeb9702a25863e60e3c6d6bfaa23987d87a0c6"
+    },
+    "precedence": {
+      "file": "combined-precedence.csv.gz",
+      "sha256": "0915915f3cbdd0cc7e132cca05a7e79eec9d0183fcf6c3c3bfe425d8231b3393"
+    }
+  },
+  "python": "3.12.14",
+  "packages": {
+    "structural-signatures": "0.1.0",
+    "numpy": "2.5.5",
+    "pandas": "2.3.3",
+    "networkx": "3.7",
+    "scipy": "1.18.1"
+  }
+}

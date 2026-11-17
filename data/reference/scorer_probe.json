@@ -1,0 +1,63 @@
+{
+  "identity": {
+    "schema": 1,
+    "model": "Qwen/Qwen3-Reranker-0.6B",
+    "snapshot": "e61197ed45024b0ed8a2d74b80b4d909f1255473",
+    "prompt_sha256": "b964ef774e7b7ac544b522cc7828540caa811ad11806cab52bff79878629eeb6",
+    "max_length": 256,
+    "api": "CrossEncoder.predict",
+    "device": "cpu",
+    "dtype": "torch.bfloat16",
+    "packages": {
+      "sentence-transformers": "5.6.1",
+      "transformers": "5.14.1",
+      "torch": "2.11.0+cu129",
+      "numpy": "2.2.6"
+    }
+  },
+  "keys": [
+    "00049dd0ea7df9fe8129542fafdde64dd62267f238e9f583a1ea1713f5828a40",
+    "000bd6f1cbcc62e085e413d22f65520fb854d3f4e147ec2bea47550eba06a2b0",
+    "001e5c720b85baa6d1bb1673850a9cbefb4504ad571951326bb35ff418c865a2",
+    "003433efc6a230251f20b1f30ef9b85698f55d1e5f4ce57839ea1d21f7fbfc00"
+  ],
+  "archive": [
+    [
+      0.125,
+      2.125
+    ],
+    [
+      -6.9375,
+      -6.8125
+    ],
+    [
+      5.875,
+      -1.875
+    ],
+    [
+      3.375,
+      3.6875
+    ]
+  ],
+  "fresh_cpu": [
+    [
+      0.125,
+      2.125
+    ],
+    [
+      -6.96875,
+      -6.625
+    ],
+    [
+      5.75,
+      -1.875
+    ],
+    [
+      3.25,
+      3.625
+    ]
+  ],
+  "max_abs_error": 0.1875,
+  "cache_new": 4,
+  "cache_hits": 4
+}
