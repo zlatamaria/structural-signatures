@@ -22,6 +22,12 @@
     "name": "math500_test_expanded.csv",
     "sha256_uncompressed": "dc88d6a5947cdef67ea743ff96d237b57ee870669887aff21b2b48cb8ab186d2"
   },
+  "public_test_questions": {
+    "url": "https://huggingface.co/datasets/HuggingFaceH4/MATH-500/resolve/6e4ed1a2a79af7d8630a6b768ec859cb5af4d3be/test.jsonl",
+    "sha256": "35dc41080a3680858b27fa7e0533d2d547825316fc5dafe5d316f4ccc5a06132",
+    "matched_rows": 500,
+    "matched_fields_in_order": ["unique_id", "problem", "answer"]
+  },
   "cache_sample": {
     "source": "checkpoint_test_cache_ids_200_349/test_directional_raw_logits_ids_200_349.sqlite",
     "table": "directional_logits",

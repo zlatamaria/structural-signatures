@@ -2,6 +2,9 @@
 
 from dataclasses import dataclass
 
+METRIC = "largest_component_excess_edges_per_trace"
+EXCESS_METRIC = "largest_component_excess_edges"
+
 
 @dataclass(frozen=True)
 class Config:
@@ -13,6 +16,7 @@ class Config:
     transition_min_support: int = 3
     consistency: float = 0.80
     minimum_answer_frequency: int = 2
+    metric: str = METRIC
 
     @property
     def filters(self):
@@ -29,7 +33,13 @@ class Config:
 
 
 PRESETS = {"paper_w5": Config(window=5), "historical_w3": Config(window=3)}
-METRIC = "largest_component_excess_edges_per_trace"
+
+
+@dataclass(frozen=True)
+class Segmentation:
+    max_unit_chars: int = 900
+    max_units_per_trace: int = 96
+    minimum_unit_position: float = 0.0
 
 
 def budgets(spec):

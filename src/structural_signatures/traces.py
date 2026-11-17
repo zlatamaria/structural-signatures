@@ -3,17 +3,21 @@
 import csv
 import gzip
 from contextlib import ExitStack
+from dataclasses import asdict
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 
+from .config import Segmentation
 from .legacy import audit_answer_local_prefix_allpairs_v8_optimized_resume as v8
 from .legacy import checkpoint_route_convergence_punctuation as punctuation
 from .replay import ANSWER, EDGE, KEY
 
+DEFAULT_SEGMENTATION = Segmentation()
 
-def prepare(question_id, traces):
+
+def prepare(question_id, traces, segmentation=DEFAULT_SEGMENTATION):
     return v8.BASE.prepare_question(
         question_id=question_id,
         frame=traces,
@@ -22,10 +26,8 @@ def prepare(question_id, traces):
         answer_col="final_answer_new",
         hit_col="row_hit",
         min_unit_chars=1,
-        max_unit_chars=900,
-        max_units_per_trace=96,
         unit_context="current",
-        minimum_unit_position=0.0,
+        **asdict(segmentation),
     )
 
 
@@ -111,7 +113,9 @@ def build_question(question, cfg, sizes, scorer):
             yield candidate, details
 
 
-def build_tables(path, directory, cfg, sizes, scorer):
+def build_tables(
+    path, directory, cfg, sizes, scorer, segmentation=DEFAULT_SEGMENTATION
+):
     fields = ["id", "completion", "final_answer_new", "row_hit"]
     traces = pd.read_csv(
         path, usecols=fields, dtype={"id": str, "final_answer_new": str}
@@ -156,7 +160,7 @@ def build_tables(path, directory, cfg, sizes, scorer):
             "trace_order.csv.gz", ["id", "input_position", "retained_position"]
         )
         for qid, group in traces.groupby("id", sort=False):
-            question = prepare(qid, group)
+            question = prepare(qid, group, segmentation)
             retained = 0
             for pos, value in enumerate(group.final_answer_new):
                 valid = punctuation.normalize_answer(value) is not None

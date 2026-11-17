@@ -81,28 +81,48 @@ class LegacyScores(ArchivedScores):
 class ModelScores(CachedDirectionalReranker):
     """Use the recovered CrossEncoder calls and retain its scalar outputs verbatim."""
 
-    def __init__(self, cache_dir, device, revision=SNAPSHOT, batch_size=64):
+    def __init__(
+        self,
+        cache_dir,
+        device,
+        revision=None,
+        batch_size=64,
+        *,
+        model_name=DEFAULT_RERANKER_MODEL,
+        max_length=256,
+    ):
         from huggingface_hub import snapshot_download
         from sentence_transformers import CrossEncoder
 
-        self.model_name = DEFAULT_RERANKER_MODEL
+        self.model_name = model_name
         self.prompt = PROMPT
         self.prompt_hash = PROMPT_HASH
-        self.max_length = 256
+        self.max_length = max_length
         self.batch_size = batch_size
-        self.snapshot = snapshot_download(repo_id=self.model_name, revision=revision)
+        if revision is None and model_name == DEFAULT_RERANKER_MODEL:
+            revision = SNAPSHOT
+        # Resolve a movable Hub reference once. CrossEncoder fetches the weights
+        # and tokenizer it uses at that commit, including from an offline cache.
+        self.snapshot = snapshot_download(
+            repo_id=self.model_name, revision=revision, allow_patterns=["config.json"]
+        )
+        resolved_revision = Path(self.snapshot).name
         self.model = CrossEncoder(
-            self.snapshot,
+            self.model_name,
+            revision=resolved_revision,
             device=device,
-            local_files_only=True,
             max_length=self.max_length,
             prompts={"checkpoint_equivalence": PROMPT},
             default_prompt_name="checkpoint_equivalence",
         )
+        if self.model.num_labels != 1:
+            raise ValueError(
+                "The reranker must return one scalar score for each text pair"
+            )
         self.identity = {
             "schema": 1,
             "model": self.model_name,
-            "snapshot": Path(self.snapshot).name,
+            "snapshot": resolved_revision,
             "prompt_sha256": PROMPT_HASH,
             "max_length": self.max_length,
             "api": "CrossEncoder.predict",
