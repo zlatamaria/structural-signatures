@@ -1,4 +1,6 @@
+import json
 from pathlib import Path
+from runpy import run_path
 
 import numpy as np
 import pandas as pd
@@ -166,3 +168,99 @@ def test_sqlite_shard_is_read_only(tmp_path):
             source.connection.execute("DELETE FROM directional_logits")
     finally:
         source.close()
+
+
+def test_parameterized_build_and_replay(tmp_path):
+    stages = tmp_path / "build"
+    selected = tmp_path / "selection"
+    settings = [
+        "--score-mode",
+        "raw_mean",
+        "--edge-quantile",
+        "0.85",
+        "--cohesion-mode",
+        "q10",
+        "--community-min-support",
+        "2",
+        "--transition-min-support",
+        "2",
+        "--consistency",
+        "0.70",
+        "--budgets",
+        "5-6",
+    ]
+    main(
+        [
+            "build",
+            "--traces",
+            str(EXAMPLE / "q315_traces.csv.gz"),
+            "--scores",
+            str(EXAMPLE / "q315_scores.csv.gz"),
+            "--out",
+            str(stages),
+            "--minimum-unit-position",
+            "0.2",
+            "--max-units-per-trace",
+            "12",
+            *settings,
+        ]
+    )
+    main(
+        [
+            "replay",
+            "--answers",
+            str(stages / "answers.csv.gz"),
+            "--precedence",
+            str(stages / "precedence.csv.gz"),
+            "--out",
+            str(selected),
+            "--metric",
+            "largest_component_excess_edges",
+            "--window",
+            "1",
+            "--minimum-answer-frequency",
+            "3",
+            "--expected-ids",
+            "1",
+            *settings,
+        ]
+    )
+    build_meta = json.loads((stages / "run.json").read_text())
+    assert build_meta["config"]["edge_quantile"] == 0.85
+    assert build_meta["segmentation"]["max_units_per_trace"] == 12
+    metadata = json.loads((selected / "run.json").read_text())
+    assert metadata["config"]["minimum_answer_frequency"] == 3
+    scores = pd.read_csv(selected / "answer_scores.csv.gz")
+    rolling = "largest_component_excess_edges__rolling_mean_w1"
+    np.testing.assert_array_equal(scores[rolling], scores.excess_edges)
+    pred = pd.read_csv(selected / "predictions.csv.gz")
+    assert pred.metric.eq(rolling).all() and len(pred) == 2
+
+
+def test_a_different_model_requires_fresh_scores(tmp_path):
+    with pytest.raises(SystemExit):
+        main(
+            [
+                "build",
+                "--traces",
+                str(EXAMPLE / "q315_traces.csv.gz"),
+                "--scores",
+                str(EXAMPLE / "q315_scores.csv.gz"),
+                "--reranker-model",
+                "another/model",
+                "--out",
+                str(tmp_path / "graphs"),
+            ]
+        )
+    assert not (tmp_path / "graphs").exists()
+
+
+def test_sample_extractor_matches_archived_draws():
+    extract = run_path(str(ROOT / "scripts/sample_math500.py"))["boxed_answer"]
+    traces = pd.read_csv(
+        EXAMPLE / "q315_traces.csv.gz", dtype=str, keep_default_na=False
+    )
+    assert traces.completion.map(extract).equals(traces.final_answer_new)
+    assert extract(r"\boxed{1} then \boxed{\frac{2}{3}}") == r"\frac{2}{3}"
+    assert extract(r"\boxed{1} then \boxed{incomplete") == ""
+    assert extract(r"Final Answer: \boxed{None}") == ""

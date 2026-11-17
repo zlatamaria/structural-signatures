@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 
-from .config import METRIC
+from .config import EXCESS_METRIC, METRIC
 from .graphs import maximum_excess, shortcuts
 from .legacy import evaluate_saved_shortcut_graph_metrics_consistency as original
 
@@ -119,11 +119,14 @@ def load_scores(
     return answers.reset_index()
 
 
-def select(scores, cfg):
+def evaluate(scores, cfg):
+    """Return candidate scores (including their rolling values), choices and accuracy."""
     ordered = scores.sort_values(["id", "answer", "sample_size"], kind="stable").copy()
-    rolling = f"{METRIC}__rolling_mean_w{cfg.window}"
+    if cfg.metric == EXCESS_METRIC:
+        ordered[cfg.metric] = ordered["excess_edges"]
+    rolling = f"{cfg.metric}__rolling_mean_w{cfg.window}"
     means = (
-        ordered.groupby(["id", "answer"], sort=False)[METRIC]
+        ordered.groupby(["id", "answer"], sort=False)[cfg.metric]
         .rolling(cfg.window, min_periods=1)
         .mean()
     )
@@ -135,4 +138,9 @@ def select(scores, cfg):
         ordered.groupby(["id", "sample_size"]).raw_count.sum().rename("retained_budget")
     )
     predictions = predictions.join(counts, on=["id", "sample_size"])
-    return predictions, original.summarize_accuracy(predictions)
+    return ordered, predictions, original.summarize_accuracy(predictions)
+
+
+def select(scores, cfg):
+    _, predictions, accuracy = evaluate(scores, cfg)
+    return predictions, accuracy

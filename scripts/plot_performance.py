@@ -59,7 +59,8 @@ def draw(predictions, out):
     axes[0].axhline(0, color="#89868c", lw=0.8)
     axes[0].set_ylabel("Questions")
     axes[0].yaxis.set_major_locator(MaxNLocator(5, integer=True))
-    axes[0].scatter([99], [net.loc[99]], s=30, color="#684699", zorder=4)
+    first, last = int(net.index.min()), int(net.index.max())
+    axes[0].scatter([last], [net.loc[last]], s=30, color="#684699", zorder=4)
     pos, neg = np.zeros(len(signed)), np.zeros(len(signed))
     for (event, data), color in zip(signed.items(), COLORS):
         if not data.any():
@@ -90,8 +91,9 @@ def draw(predictions, out):
     )
     axes[2].set_ylabel("Accuracy (%)")
     axes[2].set_xlabel("Requested traces per question")
-    axes[2].set_xlim(4, 100)
-    axes[2].set_xticks([5, 15, 25, 35, 45, 55, 65, 75, 85, 99])
+    axes[2].set_xlim(first - 1, last + 1)
+    ticks = [k for k in (15, 25, 35, 45, 55, 65, 75, 85) if first < k < last]
+    axes[2].set_xticks(sorted({first, *ticks, last}))
     axes[2].legend(frameon=False, loc="lower right", fontsize=9)
     handles, labels = axes[1].get_legend_handles_labels()
     fig.legend(handles, labels, loc="lower center", ncols=3, frameon=False, fontsize=8)

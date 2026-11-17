@@ -7,13 +7,14 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from structural_signatures.cli import model_options, reranker_arguments
 from structural_signatures.scoring import FrozenScores, ModelScores
 from structural_signatures.traces import prepare, v8
 
 ROOT = Path(__file__).resolve().parents[1]
 
 
-def check(cache, device):
+def check(cache, device, **options):
     example = ROOT / "data/example"
     frozen = FrozenScores(example / "q315_scores.csv.gz")
     chosen = sorted(frozen.rows)[:4]
@@ -38,7 +39,7 @@ def check(cache, device):
                 lookup[key] = tuple(sorted(texts))
     pairs = [lookup[key] for key in chosen]
     ref = np.column_stack(frozen.directional_logits(pairs))
-    model = ModelScores(cache, device, batch_size=4)
+    model = ModelScores(cache, device, **{"batch_size": 4, **options})
     try:
         current = np.column_stack(model.directional_logits(pairs))
         again = np.column_stack(model.directional_logits(pairs))
@@ -59,6 +60,6 @@ def check(cache, device):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cache", required=True, type=Path)
-    parser.add_argument("--device", default="cpu")
+    reranker_arguments(parser, batch_size=4)
     args = parser.parse_args()
-    print(json.dumps(check(args.cache, args.device), indent=2))
+    print(json.dumps(check(args.cache, args.device, **model_options(args)), indent=2))
